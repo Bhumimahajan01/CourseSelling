@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="./login.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <div class="container mt-3">
+        <h1 id="heading">Login</h1>
+        <form id="login-form">
+            <div class="flex-container">
+                <input type="text" id="email" placeholder="Email Address" class="input-fields" required>
+                <div class="password-container">
+                    <input type="password" id="password-field" placeholder="Password" class="input-fields" required>
+                </div>
+            </div>
+            <div class="remember-me">
+                <input type="checkbox" id="remember-me-checkbox">
+                <label for="remember-me-checkbox">Remember Me</label>
+            </div> 
+            <button type="button" id="sign-in-button" onclick="SignIn()">Log In</button>
+            <p id="status-message"></p>
+        </form>
+    </div>
+
+    <script>
+        async function SignIn() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password-field').value;
+
+            try {
+                const response = await axios.post('http://localhost:3000/user/signin', {
+                    email,
+                    password
+                });
+
+                if (response.data.success) {
+                    // Store token in local storage
+                    localStorage.setItem('token', response.data.token);
+                    document.getElementById('status-message').textContent = 'Login successful!';
+                    document.getElementById('status-message').style.color = 'green';
+                    
+                    // Redirect to another page or perform other actions
+                    window.location.href = './resources2.html'; // Change to your desired page
+                } else {
+                    document.getElementById('status-message').textContent = 'Invalid credentials. Please try again.';
+                    document.getElementById('status-message').style.color = 'red';
+                }
+            } catch (error) {
+                console.error('Error during login:', error);
+                document.getElementById('status-message').textContent = 'An error occurred. Please try again.';
+                document.getElementById('status-message').style.color = 'red';
+            }
+        }
+    </script> 
+</body>
+</html>
